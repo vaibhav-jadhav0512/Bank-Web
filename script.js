@@ -35,18 +35,18 @@ document.addEventListener('keydown', function (e) {
 
 const allSections = document.querySelectorAll('.section');
 const allButtons = document.getElementsByTagName('button');
-const message = document.createElement('div');
-message.classList.add('cookie-message');
-// message.textContent = 'We use cookies for improved functionality';
-message.innerHTML =
-  'We use cookies for improved functionality <button class = "btn btn--close-cookie">Got it!</button>';
-const header = document.querySelector('.header');
-header.append(message);
-document.querySelector('.btn--close-cookie').addEventListener('click', () => {
-  message.remove();
-});
-message.style.backgroundColor = '#37383d';
-message.style.width = '120%';
+// const message = document.createElement('div');
+// message.classList.add('cookie-message');
+// // message.textContent = 'We use cookies for improved functionality';
+// message.innerHTML =
+//   'We use cookies for improved functionality <button class = "btn btn--close-cookie">Got it!</button>';
+// const header = document.querySelector('.header');
+// header.prepend(message);
+// document.querySelector('.btn--close-cookie').addEventListener('click', () => {
+//   message.remove();
+// });
+// message.style.backgroundColor = '#37383d';
+// message.style.width = '120%';
 
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
@@ -78,4 +78,58 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
     const id = e.target.getAttribute('href');
     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
   }
+});
+
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContent = document.querySelectorAll('.operations__content');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const nav = document.querySelector('.nav');
+
+// tabs.forEach(t =>
+//   t.addEventListener('click', e => {
+//     console.log('Tab');
+//   })
+// );
+tabsContainer.addEventListener('click', e => {
+  const clicked = e.target.closest('.operations__tab');
+  //Guard clause
+  if (!clicked) return;
+  tabs.forEach(t => t.classList.remove('operations__tab--active'));
+
+  tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+
+  clicked.classList.add('operations__tab--active');
+  //Activate container
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add('operations__content--active');
+});
+
+const handleHover = function (e) {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+    siblings.forEach(el => {
+      if (el !== link) el.style.opacity = this;
+    });
+    logo.style.opacity = this;
+  }
+};
+
+// nav.addEventListener('mouseover', e => {
+//   handleHover(e, 0.5);
+// });
+// nav.addEventListener('mouseout', e => {
+//   handleHover(e, 1);
+// });
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+nav.addEventListener('mouseout', handleHover.bind(1));
+
+//Sticky navbar
+const initialCords = section1.getBoundingClientRect();
+
+window.addEventListener('scroll', function () {
+  if (window.scrollY > initialCords.top) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
 });
